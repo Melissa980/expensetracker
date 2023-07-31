@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Superhero Sightings</title>
+</head>
+<body>
+<!-- Main Body of Page -->
+<div class="container">
+    <!-- HEADING -->
+    <div class="row m-4">
+        <div class="col text-center" id="headerSection">
+            <p>Hero Education and Relationship Organization (HERO)</p>
+            <h1>Superhero Database</h1>
+        </div>
+    </div>
+    <!-- NAVBAR -->
+    <nav
+            class="navbar navbar-expand-lg navbar-light bg-light"
+            id="navSection"
+    >
+        <!-- <a class="navbar-brand" href="#">Superhero Sightings</a> -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">HOME</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="sightings">SIGHTINGS </a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="heroes">HEROES <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="locations">LOCATIONS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="superpowers">SUPERPOWERS</a
+                    >
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="organizations">ORGANIZATIONS</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!--    Filter Hero-->
+    <div class="row m-4 border border-dark justify-content-center">
+        <form action="filterHeroes" method="GET" class="d-flex row m-4">
+            <h3 style="text-align: left;">Filter Heroes</h3>
+
+            <div class="form-group row m-4 justify-content-center">
+                <!--   Organization-->
+                <div class="form-group row">
+                    <label for="organizations" class="col-4 col-form-label">Organizations</label>
+                    <div class="col-9">
+                        <select
+                                multiple
+                                id="organizations"
+                                name="organizationID"
+                                class="form-control">
+                            <option th:each="organization : ${organizations}"
+                                    th:value="${organization.organizationID}"
+                                    th:text="${organization.name}"
+                            >
+                                Organization Name</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!--            Location-->
+                <div class="form-group row">
+                    <label for="location" class="col-4 col-form-label">
+                        Locations</label>
+                    <div class="col-9">
+                        <select
+                                multiple
+                                id="location"
+                                name="locationID"
+                                class="form-control" >
+                            <option th:each="location : ${locations}"
+                                    th:value="${location.locationID}"
+                                    th:text="${location.name}"
+                            >
+                                Location Name</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Filter Heroes</button>
+                <p th:if="${noFilterSelected.booleanValue()}"
+                   class="alert alert-danger">
+                    Please select at least one filter. </p>
+            </div>
+
+        </form>
+    </div>
+
+    <!--    Add Hero-->
+    <div class="row m-4 border border-dark">
+        <div class="col m-3">
+            <a href="addHero" class="btn btn-outline-primary btn-md">Add Hero</a>
+        </div>
+    </div>
+
+
+    <!--    List Heroes-->
+    <div class="row m-4 border border-dark">
+        <div class="col text-center m-3">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Superpower</th>
+                    <th>Details</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="hero : ${heroes}">
+                    <td th:text="${hero.heroId}">Hero ID</td>
+                    <td th:text='${hero.name}'>Hero Name</td>
+                    <td th:text='${hero.description}'>Hero Description</td>
+                    <td th:if="${hero.superpower == null}" th:text="${'No superpower'}">Superpower</td>
+
+                    <td th:if="${hero.superpower != null}" th:text="${hero.superpower.name}">Superpower</td>
+
+                    <td><a href="#" th:href="@{/heroDetail(heroId=${hero.heroId})}">Details</a></td>
+                    <td><a href="#" th:href="@{/editHero(heroId=${hero.heroId})}">Edit</a></td>
+                    <td><a href="#" th:href="@{/deleteHero(heroId=${hero.heroId})}">Delete</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- End main body -->
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+</html>;
